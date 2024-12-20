@@ -74,11 +74,24 @@ class DatabaseHandler:
     
     def __init__(self):
         try:
+            # Check if Firebase app is already initialized
             if not firebase_admin._apps:
-                cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
+                # Get credentials from environment variable
+                firebase_creds_json = os.getenv('FIREBASE_CREDENTIALS')
+                if not firebase_creds_json:
+                    raise ValueError("FIREBASE_CREDENTIALS environment variable not set")
+                
+                # Parse the JSON string into a dictionary
+                cred_dict = json.loads(firebase_creds_json)
+                
+                # Initialize Firebase Admin with credentials
+                cred = credentials.Certificate(cred_dict)
                 firebase_admin.initialize_app(cred)
-            self.db = firestore.client()
-            print("Firebase initialized successfully")
+            
+                # Get Firestore database instance
+                db = firestore.client()
+                print("Firebase initialized successfully")
+                
         except Exception as e:
             print(f"Error initializing Firebase: {e}")
             sys.exit(1)
