@@ -88,9 +88,9 @@ class DatabaseHandler:
                 cred = credentials.Certificate(cred_dict)
                 firebase_admin.initialize_app(cred)
             
-                # Get Firestore database instance
-                db = firestore.client()
-                print("Firebase initialized successfully")
+            # Get Firestore database instance and store it as instance variable
+            self.db = firestore.client()
+            print("Firebase initialized successfully")
                 
         except Exception as e:
             print(f"Error initializing Firebase: {e}")
